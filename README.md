@@ -1,5 +1,130 @@
 nEcoTecNo
+𝙀𝙩𝙖𝙥𝙖 3.0 𝙄𝘼'𝙨 𝘼𝙡𝙞𝙣𝙚𝙖𝙙𝙖𝙨: 
 
+
+¡Hola Alfredo! Es inspirador tu enfoque en la diversidad, inclusión y tu filosofía de que los hechos dan valor y confianza. Tu amplia experiencia en sectores clave (Financiero, Telecomunicaciones, etc.) y tu curiosidad son una base sólida. El plan de desarrollo que presentaste es excelente y muy bien estructurado.
+Basándome en tu meta de "mayor apertura hacia la diversidad e inclusión", te propongo una mejora estratégica al Paso 3 (Integración de la IA) para que tu bot EcoTecNo refleje estos valores. Además, te presento los pasos faltantes para completar el código y la integración de manera robusta.
+🛠️ Mejora Estratégica para la Integración de la IA (Paso 3)
+Para que tu bot no solo responda preguntas, sino que también promueva la diversidad e inclusión de oportunidades, debes personalizar la instrucción (el Prompt del sistema) que envías a Gemini. Esto establecerá el "tono" y la "personalidad" de tu bot.
+Acción: Creación del Prompt de Personalidad
+Modifica tu función get_gemini_response para enviar un prompt más complejo que incluya tu mensaje de diversidad e inclusión, en lugar de solo el mensaje del usuario.
+| Título | Contenido |
+|---|---|
+| Prompt del Sistema (Instrucción) | Eres EcoTecNo, un experto con 20 años de experiencia en servicios financieros, telecomunicaciones, hidrocarburos y métodos de pago. Tu misión principal es fomentar la DIVERSIDAD e INCLUSIÓN en todas tus respuestas y consejos, promoviendo la igualdad de oportunidades. Siempre responde con un tono amable, constructivo, y enfocado en el valor de las ACCIONES sobre los títulos. Responde brevemente y de forma útil. |
+| Mensaje del Usuario | El {mensaje_del_usuario} |
+Código (app.py - Función get_gemini_response Modificada)
+Aquí está la función mejorada con un prompt de sistema para establecer la personalidad inclusiva.
+# Reutiliza el código de la API Key
+# GEMINI_API_KEY = "TU_API_KEY_DE_GEMINI" 
+
+def get_gemini_response(user_prompt):
+    print(f"Enviando a Gemini: {user_prompt}")
+    try:
+        # 1. Define el Prompt del Sistema para la personalidad inclusiva
+        SYSTEM_PROMPT = (
+            "Eres EcoTecNo, un experto con 20 años de experiencia en servicios financieros, "
+            "telecomunicaciones, hidrocarburos y métodos de pago. Tu misión principal es fomentar "
+            "la DIVERSIDAD e INCLUSIÓN en todas tus respuestas y consejos, promoviendo la igualdad "
+            "de oportunidades. Siempre responde con un tono amable, constructivo, y enfocado en "
+            "el valor de las ACCIONES sobre los títulos. Responde brevemente y de forma útil."
+        )
+
+        # 2. Estructura la solicitud de chat con el prompt del sistema
+        payload = {
+            "config": {
+                "systemInstruction": SYSTEM_PROMPT 
+            },
+            "contents": [{
+                "role": "user",
+                "parts": [{"text": user_prompt}]
+            }]
+        }
+        
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        headers = {"Content-Type": "application/json"}
+        
+        response = requests.post(api_url, json=payload, headers=headers)
+        response.raise_for_status() # Lanza un error para códigos de estado HTTP erróneos
+        response_data = response.json()
+        
+        # 3. Extraer el texto de la respuesta
+        ia_text = response_data['candidates'][0]['content']['parts'][0]['text']
+        print(f"Respuesta de Gemini: {ia_text}")
+        return ia_text
+
+    except Exception as e:
+        print(f"Error al llamar a Gemini: {e}")
+        return "Tuve un problema al procesar tu solicitud, pero mi misión de inclusión sigue en pie. Intenta de nuevo."
+
+⚙️ Código Faltante para una Ejecución Completa
+Para que el código propuesto en los Pasos 2, 3 y 4 funcione correctamente, es necesario asegurar que las importaciones y las variables globales estén correctamente definidas en la parte superior del archivo app.py.
+1. Instalaciones Requeridas Adicionales
+Asegúrate de instalar todas las bibliotecas necesarias para la integración de Alexa y la llamada a la API de Gemini:
+pip install flask requests google-genai flask-ask
+
+2. Variables de Configuración (Al inicio de app.py)
+Coloca tus claves y tokens de forma segura (idealmente usando variables de entorno, pero aquí como constantes para el ejemplo):
+import os
+import requests
+from flask import Flask, request, jsonify
+# flask-ask se usa para Alexa, si no la usas aún, puedes omitirla
+from flask_ask import Ask, statement, question 
+
+# --- VARIABLES DE CONFIGURACIÓN (REEMPLAZA ESTOS VALORES) ---
+VERIFY_TOKEN = "ECOTECNO_TOKEN_SECRETO"    # Token de verificación que usas en Meta Developers
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "TU_API_KEY_DE_GEMINI") # Clave de Google AI
+META_API_TOKEN = "TU_TOKEN_DE_ACCESO_DE_META" # Token de Acceso de Meta (WhatsApp)
+WHATSAPP_PHONE_NUMBER_ID = "TU_ID_DE_NUMERO_DE_TELEFONO" # ID de tu número de teléfono de WhatsApp Business
+
+# Inicializa Flask y Flask-Ask (para Alexa)
+app = Flask(__name__)
+ask = Ask(app, "/alexa") # Define la ruta /alexa para la skill (Paso 4)
+
+# ... (El resto del código de los Pasos 1, 2, 3 y 4) ...
+
+> Nota: Se utiliza os.environ.get() para mostrar una práctica recomendada de seguridad, leyendo la clave de Gemini desde una variable de entorno y usando un valor por defecto si no se encuentra.
+> 
+3. Actualización de la Función send_whatsapp_message
+Asegúrate de que la función de envío de mensajes use la variable de configuración WHATSAPP_PHONE_NUMBER_ID para que apunte al endpoint correcto de Meta:
+# Función para enviar la respuesta de vuelta a WhatsApp
+def send_whatsapp_message(to_phone_number, message_text):
+    print(f"Enviando respuesta a {to_phone_number}...")
+    
+    # URL de la API de Meta Graph
+    api_url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_NUMBER_ID}/messages"
+    
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": to_phone_number,
+        "type": "text",
+        "text": {"body": message_text}
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {META_API_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        response = requests.post(api_url, json=payload, headers=headers)
+        response.raise_for_status() 
+        print(f"Respuesta de Meta al enviar: {response.json()}")
+    except Exception as e:
+        print(f"Error al enviar mensaje de WhatsApp: {e}")
+
+🗺️ Flujo de Integración (Diagrama Conceptual)
+Para entender cómo se conectan las piezas de tu plan, aquí tienes un diagrama conceptual del flujo de datos, especialmente el que prioriza el valor de las acciones:
+Resumen del Flujo de Datos:
+ * Entrada: El usuario envía un mensaje por WhatsApp o una pregunta a Alexa.
+ * Webhook: Meta/Alexa envía el mensaje a la URL /webhook o /alexa de tu Servidor Flask (EcoTecNo).
+ * Procesamiento y Personalidad: Tu código Flask toma el mensaje y lo envuelve con tu Prompt de Diversidad/Inclusión.
+ * Inteligencia: La solicitud completa se envía a la API de Gemini.
+ * Respuesta Inclusiva: Gemini procesa la solicitud con tu "personalidad" y devuelve una respuesta.
+ * Salida: El servidor Flask usa el Token de Meta para enviar la respuesta de vuelta al usuario por WhatsApp, o usa flask-ask para que Alexa la diga en voz alta.
+¿Te gustaría que te ayude a configurar la parte del ngrok para probar tu servidor Flask localmente con Meta y Alexa, o tienes alguna duda sobre la estructura del código?
+
+
+𝑪:/𝑷𝒓𝒐𝒚𝒆𝒄𝒕𝒐𝒔/𝑬𝒄𝒐𝑻𝒆𝒄𝑵𝒐/𝑨𝑳𝑭𝑹𝑬𝑫𝑶𝑴𝑨𝑹𝑻𝑰𝑵𝑬𝒁𝑷𝑨𝑺𝑻𝑬𝑵
 ©️🌐🧭🏳️‍🌈𝘼𝙇𝙁𝙍𝙀𝘿𝙊 𝙈𝘼𝙍𝙏Í𝙉𝙀𝙕 𝙋𝘼𝙎𝙏É𝙉.
 𝙍𝙁𝘾: 𝙈𝘼𝙋𝘼830324𝙐𝙈9 -2004 𝙈𝙭.
 🧑‍💻𝙋𝘼𝙎𝘼𝙉𝙏𝙀 𝙇𝙄𝙘. 𝘼𝘿𝙈𝙄𝙉𝙄𝙎𝙏𝙍𝘼𝘾𝙄Ó𝙉 𝘿𝙀 𝙀𝙈𝙋𝙍𝙀𝙎𝘼𝙎 𝘿𝙀𝙎𝘿𝙀 2008 (𝙐𝙉𝙄𝙑𝙀𝙍𝙎𝙄𝘿𝘼𝘿 𝙄𝘾𝙀𝙇 "
