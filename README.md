@@ -1,4 +1,8 @@
-# Gemini CLI
+©️🌐🧭🏳️‍🌈𝘼𝙇𝙁𝙍𝙀𝘿𝙊 𝙈𝘼𝙍𝙏Í𝙉𝙀𝙕 𝙋𝘼𝙎𝙏É𝙉.
+𝙍𝙁𝘾: 𝙈𝘼𝙋𝘼830324𝙐𝙈9 -2004 𝙈𝙭.
+🧑‍💻𝙋𝘼𝙎𝘼𝙉𝙏𝙀 𝙇𝙄𝙘. 𝘼𝘿𝙈𝙄𝙉𝙄𝙎𝙏𝙍𝘼𝘾𝙄Ó𝙉 𝘿𝙀 𝙀𝙈𝙋𝙍𝙀𝙎𝘼𝙎 𝘿𝙀𝙎𝘿𝙀 2008 (𝙐𝙉𝙄𝙑𝙀𝙍𝙎𝙄𝘿𝘼𝘿 𝙄𝘾𝙀𝙇 "
+
+culogayparavergonesencdmx@gmail.com# Gemini CLI
 🆔 ALFREDO MARTÍNEZ PASTÉN.
 RFC: MAPA830324UM9 DESDE 1997
 🧑‍💻PASANTE DE ADMINISTRACIÓN DE EMPRESAS DESDE 2008 (UNIVERSIDAD ICEL TLALPAN-COYOACAN )
